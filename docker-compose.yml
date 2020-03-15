@@ -1,0 +1,43 @@
+# Basic authorization with SASL (Plaintext to Kafka and DigestMD5 to Zookeeper)
+---
+version: '2'
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:5.3.0
+    ports:
+      - '31000:31000'
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      KAFKA_OPTS: "-Dzookeeper.authProvider.1=org.apache.zookeeper.server.auth.SASLAuthenticationProvider -Djava.security.auth.login.config=/opt/security/zookeeper-server.jaas"
+      KAFKA_JMX_HOSTNAME: "localhost"
+      KAFKA_JMX_PORT: 31000
+    volumes:
+      - ./security:/opt/security
+
+  kafka:
+    image: confluentinc/cp-enterprise-kafka:5.3.0
+    ports:
+      - '9093:9093'
+      - '31001:31001'
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_INTER_BROKER_LISTENER_NAME: SASL_PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: SASL_PLAINTEXT://localhost:9093
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 100
+      KAFKA_SASL_ENABLED_MECHANISMS: PLAIN
+      KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: PLAIN
+      KAFKA_AUTHORIZER_CLASS_NAME: kafka.security.auth.SimpleAclAuthorizer
+      KAFKA_SUPER_USERS: "User:admin"
+      KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "false"
+      KAFKA_ZOOKEEPER_SET_ACL: "true"
+      KAFKA_OPTS: "-Djava.security.auth.login.config=/opt/security/kafka-server.jaas"
+      KAFKA_JMX_HOSTNAME: "localhost"
+      KAFKA_JMX_PORT: 31001
+    volumes:
+      - ./security:/opt/security
