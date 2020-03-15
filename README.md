@@ -72,6 +72,8 @@ Similarly to consumer from the topic:
 
 ### Kafka Console CLI
 
+The commands below are executed from the directory where this repo was cloned (due to the client-properties relative directory)
+
 #### Producer tests
 
 ##### No authentication configured
