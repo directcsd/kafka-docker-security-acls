@@ -3,7 +3,7 @@
 version: '2'
 services:
   zookeeper:
-    image: confluentinc/cp-zookeeper:5.3.0
+    image: confluentinc/cp-zookeeper:5.4.1
     ports:
       - '31000:31000'
     environment:
@@ -16,7 +16,7 @@ services:
       - ./security:/opt/security
 
   kafka:
-    image: confluentinc/cp-enterprise-kafka:5.3.0
+    image: confluentinc/cp-enterprise-kafka:5.4.1
     ports:
       - '9093:9093'
       - '31001:31001'
