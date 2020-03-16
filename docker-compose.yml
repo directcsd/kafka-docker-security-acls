@@ -9,7 +9,7 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
-      KAFKA_OPTS: "-Dzookeeper.authProvider.1=org.apache.zookeeper.server.auth.SASLAuthenticationProvider -Djava.security.auth.login.config=/opt/security/zookeeper-server.jaas"
+      KAFKA_OPTS: "-Dzookeeper.authProvider.1=org.apache.zookeeper.server.auth.SASLAuthenticationProvider -Dzookeeper.requireClientAuthScheme=sasl -Djava.security.auth.login.config=/opt/security/zookeeper-server.jaas"
       KAFKA_JMX_HOSTNAME: "localhost"
       KAFKA_JMX_PORT: 31000
     volumes:
